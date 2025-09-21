@@ -1,15 +1,39 @@
 package main
 
 import (
-	"fmt"
 	"ashitomW/mazeGen/maze"
+	"fmt"
+
+	"github.com/alexflint/go-arg"
 )
 
+var args struct{
+	Solve string `arg:"required"` 
+}
+
+
+
 func main() {
-	m := maze.NewMaze(20, 20)
+
+	arg.MustParse(&args)
+	
+
+
+	m := maze.NewMaze(15, 15)
 	m.Generate(0, 0)
 
-	path := m.SolveDjkstra()
+	var path []maze.Point
+
+	switch args.Solve {
+case "dfs":
+		path = m.SolveDfs()	
+	case "astar":
+		path = m.SolveAStar()
+	case "bfs":
+		path = m.Solve()
+	case "dijkstra":
+		path = m.SolveDjkstra()
+	}
 
 	for y := 0; y < m.Height; y++ {
 			for x := 0; x < m.Width; x++ {
