@@ -47,8 +47,8 @@ func (m *Maze) getUnvisitedNeighbors(c *Cell) []*Cell{
 
 	for _,d := range dirs{
 		// calculating neighbours coordinate
-		nx, ny := c.x+d[0], c.y+d[1]
-		if nx >= 0 && ny >=0 && nx <m.width && ny <m.height{
+		nx, ny := c.X+d[0], c.Y+d[1]
+		if nx >= 0 && ny >=0 && nx <m.Width && ny <m.Height{
 			neighbor := m.Grid	[ny][nx]
 			if !neighbor.visited{
 				neighbors = append(neighbors, neighbor)
@@ -63,8 +63,8 @@ func (m *Maze) getUnvisitedNeighbors(c *Cell) []*Cell{
 
 // walls Index : 0-> Top, 1-> Right , 2-> Bottom ,  3-> Left
 func (m *Maze) removeWall(a,b *Cell){
-	dx := b.x - a.x
-	dy := b.y - a.y 
+	dx := b.X - a.X
+	dy := b.Y - a.Y 
 
 
 	// remove wall from a and b of index specified 
