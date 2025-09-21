@@ -13,7 +13,7 @@ func init(){
 func (m *Maze) Generate(x,y int){
 	stack:= []*Cell{}
 	start:= m.Grid[y][x]
-	start.visited = true
+	start.Visited = true
 	stack = append(stack, start)
 
 
@@ -23,7 +23,7 @@ func (m *Maze) Generate(x,y int){
 		if len(neighbors) > 0 {
 			next:= neighbors[rand.Intn(len(neighbors))]
 			m.removeWall(current,next)
-			next.visited = true
+			next.Visited = true
 			stack = append(stack, next)
 		}else{
 			//backtrack
@@ -47,10 +47,10 @@ func (m *Maze) getUnvisitedNeighbors(c *Cell) []*Cell{
 
 	for _,d := range dirs{
 		// calculating neighbours coordinate
-		nx, ny := c.x+d[0], c.y+d[1]
-		if nx >= 0 && ny >=0 && nx <m.width && ny <m.height{
+		nx, ny := c.X+d[0], c.Y+d[1]
+		if nx >= 0 && ny >=0 && nx <m.Width && ny <m.Height{
 			neighbor := m.Grid	[ny][nx]
-			if !neighbor.visited{
+			if !neighbor.Visited{
 				neighbors = append(neighbors, neighbor)
 			}
 		}
@@ -63,8 +63,8 @@ func (m *Maze) getUnvisitedNeighbors(c *Cell) []*Cell{
 
 // walls Index : 0-> Top, 1-> Right , 2-> Bottom ,  3-> Left
 func (m *Maze) removeWall(a,b *Cell){
-	dx := b.x - a.x
-	dy := b.y - a.y 
+	dx := b.X - a.X
+	dy := b.Y - a.Y 
 
 
 	// remove wall from a and b of index specified 

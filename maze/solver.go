@@ -1,7 +1,7 @@
 package maze
 
 
-type Point struct {x,y int}
+type Point struct {X,Y int}
 
 type Node struct{
 		Cell *Cell
@@ -10,7 +10,7 @@ type Node struct{
 
 func (m *Maze) Solve() []Point{
 	start := m.Grid[0][0]
-	end := m.Grid[m.height-1][m.width-1]
+	end := m.Grid[m.Height-1][m.Width-1]
 
 
 	queue:= []*Node{{Cell: start}}
@@ -43,7 +43,7 @@ func (m *Maze) Solve() []Point{
 
 	path := []Point{}
 	for n:= endNode; n!=nil;n=n.Parent{
-		path = append([]Point{{x: n.Cell.x, y:n.Cell.y}},path...)
+		path = append([]Point{{X: n.Cell.X, Y:n.Cell.Y}},path...)
 	}
 
 	return path
@@ -66,8 +66,8 @@ func (m *Maze) getAccessibleNeighbors(c *Cell) []*Cell{
 	}
 
 	for _, d:= range dirs{
-		nx, ny := c.x+d.dx, c.y+d.dy
-		if nx>=0 && ny>=0 && nx<m.width && ny<m.height{
+		nx, ny := c.X+d.dx, c.Y+d.dy
+		if nx>=0 && ny>=0 && nx<m.Width && ny<m.Height{
 			neighbor:=m.Grid[ny][nx]
 			if !c.Walls[d.wall] && !neighbor.Walls[d.opp]{
 				neighbors = append(neighbors, neighbor)
