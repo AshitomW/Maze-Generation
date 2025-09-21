@@ -9,7 +9,7 @@ func main() {
 	m := maze.NewMaze(10, 10)
 	m.Generate(0, 0)
 
-	path := m.SolveAStar()
+	path := m.SolveDfs()
 
 	for y := 0; y < m.Height; y++ {
 			for x := 0; x < m.Width; x++ {
