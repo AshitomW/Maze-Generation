@@ -8,7 +8,7 @@ import (
 )
 
 var args struct{
-	Solve string `arg:"required"` 
+	Solve string `arg:"required" help:"astar,dijkstra,dfs,bfs"` 
 }
 
 
