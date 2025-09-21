@@ -6,10 +6,10 @@ import (
 )
 
 func main() {
-	m := maze.NewMaze(10, 10)
+	m := maze.NewMaze(20, 20)
 	m.Generate(0, 0)
 
-	path := m.SolveDfs()
+	path := m.SolveDjkstra()
 
 	for y := 0; y < m.Height; y++ {
 			for x := 0; x < m.Width; x++ {
