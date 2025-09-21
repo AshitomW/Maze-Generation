@@ -63,6 +63,7 @@ Run the maze generator and solver with the following command:
 # Solve using DFS
 ./mazeGen --solve dfs
 ```
+Since the maze is generated randomly each time, the differences between algorithms is not  visually obvious. However, each algorithm follows its own unique search strategy, which affects path length and exploration patterns.
 
 ## Output
 
