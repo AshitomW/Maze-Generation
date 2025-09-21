@@ -2,26 +2,26 @@ package maze
 
 
 type Cell struct {
-	X,Y int
+	x,y int
 	Walls [4]bool 
-	Visited bool
+	visited bool
 }
 
 type Maze struct{
-	Width,Height int
+	width,height int
 	Grid [][]*Cell
 }
 
-func NewMaze(width,height int) *Maze{
+func GenerateMaze(width,height int) *Maze{
 	grid := make([][]*Cell, height)
 	for y:=0;y<height;y++{
 		grid[y] = make([]*Cell, width)
 		for x:=0;x<width;x++{
 			grid[y][x] = &Cell{
-				X:x,Y:y, Walls: [4]bool{true,true,true,true},
+				x:x,y:y, Walls: [4]bool{true,true,true,true},
 			}
 		}
 	}
 
-	return &Maze{Width:width,Height:height,Grid: grid}
+	return &Maze{width:width,height:height,Grid: grid}
 }
