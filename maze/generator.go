@@ -1,67 +1,82 @@
 package maze
 
-import(
+import (
 	"math/rand"
 	"time"
 )
 
-
-func init(){
+func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
-func (m *Maze) Generate(x,y int){
-	stack:= []*Cell{}
-	start:= m.Grid[y][x]
-	start.visited = true
-	stack = append(stack, start)
+type wall struct {
+	x1, y1 int
+	x2, y2 int
+}
 
+// Using randomized Prim's algorithm with loop bias
+func (m *Maze) Generate(x, y int) {
 
-	for len(stack) > 0 {
-		current := stack[len(stack)-1]
-		neighbors := m.getUnvisitedNeighbors(current)
-		if len(neighbors) > 0 {
-			next:= neighbors[rand.Intn(len(neighbors))]
-			m.removeWall(current,next)
-			next.visited = true
-			stack = append(stack, next)
-		}else{
-			//backtrack
-			stack = stack[:len(stack)-1]
+	for row := range m.Grid {
+		for _, c := range m.Grid[row] {
+			c.visited = false
+			c.Walls = [4]bool{true, true, true, true}
 		}
 	}
 
-}
+	start := m.Grid[y][x]
+	start.visited = true
 
+	frontier := []wall{}
+	m.addFrontierWalls(start, &frontier)
 
+	for len(frontier) > 0 {
+		idx := rand.Intn(len(frontier))
+		w := frontier[idx]
 
-func (m *Maze) getUnvisitedNeighbors(c *Cell) []*Cell{
-	neighbors := []*Cell{}
-	// direction to move
-	dirs := [][2]int{
-		{0,-1}, // Top
-		{1,0}, // Right
-		{0,1}, // bottom
-		{-1,0}, //left
-	}
+		frontier[idx] = frontier[len(frontier)-1]
+		frontier = frontier[:len(frontier)-1]
 
-	for _,d := range dirs{
-		// calculating neighbours coordinate
-		nx, ny := c.X+d[0], c.Y+d[1]
-		if nx >= 0 && ny >=0 && nx <m.Width && ny <m.Height{
-			neighbor := m.Grid	[ny][nx]
-			if !neighbor.visited{
-				neighbors = append(neighbors, neighbor)
+		a := m.Grid[w.y1][w.x1]
+		b := m.Grid[w.y2][w.x2]
+
+		//  1: one side visited, the other unvisited → normal carve
+		if a.visited != b.visited {
+			m.removeWall(a, b)
+			if !a.visited {
+				a.visited = true
+				m.addFrontierWalls(a, &frontier)
+			}
+			if !b.visited {
+				b.visited = true
+				m.addFrontierWalls(b, &frontier)
+			}
+		} else {
+			// 2: both already visited → loop bias , 5% chance of removing wall when both side are already visited
+			if rand.Float64() < 0.05 {
+				m.removeWall(a, b)
 			}
 		}
 	}
-
-	return neighbors
 }
 
 
+func (m *Maze) addFrontierWalls(c *Cell, frontier *[]wall) {
+	dirs := [][2]int{
+		{0, -1}, // top
+		{1, 0},  // right
+		{0, 1},  // bottom
+		{-1, 0}, // left
+	}
+	for _, d := range dirs {
+		nx, ny := c.X+d[0], c.Y+d[1]
+		if nx >= 0 && ny >= 0 && nx < m.Width && ny < m.Height {
+			*frontier = append(*frontier, wall{c.X, c.Y, nx, ny})
+		}
+	}
+}
 
-// walls Index : 0-> Top, 1-> Right , 2-> Bottom ,  3-> Left
+
 func (m *Maze) removeWall(a,b *Cell){
 	dx := b.X - a.X
 	dy := b.Y - a.Y 
@@ -83,3 +98,4 @@ func (m *Maze) removeWall(a,b *Cell){
 		b.Walls[2] = false
 	}
 }
+

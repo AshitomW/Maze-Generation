@@ -55,7 +55,7 @@ func printMazeWithPath(m *maze.Maze, path []maze.Point) {
 			} else if x == m.Width-1 && y == m.Height-1 {
 				fmt.Print(" E ") // End
 			} else if inPath {
-				fmt.Print(" * ")
+				fmt.Print(" X ")
 			} else {
 				fmt.Print("   ")
 			}
