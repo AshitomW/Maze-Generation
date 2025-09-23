@@ -3,40 +3,30 @@ package main
 import (
 	"ashitomW/mazeGen/maze"
 	"fmt"
-
-	"github.com/alexflint/go-arg"
 )
 
-var args struct{
-	Solve string `arg:"required" help:"astar,dijkstra,dfs,bfs"` 
-}
-
-
-
 func main() {
-
-	arg.MustParse(&args)
-	
-
-
 	m := maze.NewMaze(15, 15)
 	m.Generate(0, 0)
 
-	var path []maze.Point
-
-	switch args.Solve {
-case "dfs":
-		path = m.SolveDfs()	
-	case "astar":
-		path = m.SolveAStar()
-	case "bfs":
-		path = m.Solve()
-	case "dijkstra":
-		path = m.SolveDjkstra()
+	results := map[string][]maze.Point{
+		"DFS":      m.SolveDfs(),
+		"BFS":      m.Solve(),
+		"Dijkstra": m.SolveDjkstra(),
+		"A*":       m.SolveAStar(),
 	}
 
+
+	for name, path := range results {
+		fmt.Printf("\n=== %s Solution ===\n\n", name)
+		printMazeWithPath(m, path)
+	}
+}
+
+func printMazeWithPath(m *maze.Maze, path []maze.Point) {
 	for y := 0; y < m.Height; y++ {
-			for x := 0; x < m.Width; x++ {
+		// Top walls
+		for x := 0; x < m.Width; x++ {
 			if m.Grid[y][x].Walls[0] {
 				fmt.Print("+---")
 			} else {
@@ -45,6 +35,7 @@ case "dfs":
 		}
 		fmt.Println("+")
 
+		// Cells and vertical walls
 		for x := 0; x < m.Width; x++ {
 			if m.Grid[y][x].Walls[3] {
 				fmt.Print("|")
@@ -59,20 +50,20 @@ case "dfs":
 				}
 			}
 
- if x == 0 && y == 0 {
-    fmt.Print(" S ") // Start
- } else if x == m.Width-1 && y == m.Height-1 {
-    fmt.Print(" E ") // End
- } else if inPath {
-    fmt.Print(" * ") 
- } else {
-    fmt.Print("   ")}
-
+			if x == 0 && y == 0 {
+				fmt.Print(" S ") // Start
+			} else if x == m.Width-1 && y == m.Height-1 {
+				fmt.Print(" E ") // End
+			} else if inPath {
+				fmt.Print(" * ")
+			} else {
+				fmt.Print("   ")
+			}
 		}
-
 		fmt.Println("|")
 	}
 
+	// Bottom border
 	for x := 0; x < m.Width; x++ {
 		fmt.Print("+---")
 	}
