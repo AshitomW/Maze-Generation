@@ -4,13 +4,29 @@ A Go-based maze generation and pathfinding project that implements multiple maze
 
 ## Features
 
-- **Maze Generation**: Creates random mazes using a depth-first search algorithm with backtracking
+- **Maze Generation**: Creates random mazes using randomized Prim's algorithm with loop bias for maze structures
 - **Multiple Solving Algorithms**:
   - **A\*** - Heuristic-based pathfinding with Manhattan distance
   - **Dijkstra's** - Shortest path algorithm for weighted graphs
   - **BFS** - Breadth-first search for unweighted shortest path
   - **DFS** - Depth-first search with backtracking
-- **Visual Output**: ASCII representation of the maze with the solution path marked
+- **Visual Output**: ASCII representation of the maze with solution paths marked for all algorithms
+
+## Project Structure
+
+```
+mazeGen/
+├── main.go              # Main entry point with visualization
+├── go.mod              # Go module definition
+├── README.md           # This file
+└── maze/
+    ├── maze.go         # Core maze structure and creation
+    ├── generator.go    # Randomized Prim's maze generation
+    ├── solver_bfs.go   # Breadth-first search implementation
+    ├── solver_dfs.go   # Depth-first search implementation
+    ├── solver_djkstra.go # Dijkstra's algorithm implementation
+    └── solver_astar.go # A* algorithm implementation
+```
 
 ## Installation
 
@@ -21,80 +37,51 @@ git clone <repository-url>
 cd mazeGen
 ```
 
-2. Install dependencies:
+2. Run the project:
 
 ```bash
-go mod tidy
+go run main.go
 ```
 
-3. Build the project:
+Or build and run:
 
 ```bash
 go build -o mazeGen main.go
+./mazeGen
 ```
 
 ## Usage
 
-Run the maze generator and solver with the following command:
+Simply run the program to generate a 15x15 maze and see all four solving algorithms in action:
 
 ```bash
-./mazeGen --solve <algorithm>
+go run main.go
 ```
 
-### Available Algorithms
+The program will:
 
-- `astar` - A\* pathfinding algorithm
-- `dijkstra` - Dijkstra's shortest path algorithm
-- `bfs` - Breadth-first search
-- `dfs` - Depth-first search
+1. Generate a random 15x15 maze using randomized Prim's algorithm
+2. Solve the maze using all four algorithms (DFS, BFS, Dijkstra, A\*)
+3. Display each solution with the path marked
 
-### Examples
+## Algorithm Details
 
-```bash
-# Solve using A* algorithm
-./mazeGen --solve astar
+### Maze Generation
 
-# Solve using Dijkstra's algorithm
-./mazeGen --solve dijkstra
+- **Randomized Prim's Algorithm** with 5% loop bias
+- Creates more interesting mazes with occasional loops
+- Starts from position (0,0) and grows the maze randomly
 
-# Solve using BFS
-./mazeGen --solve bfs
+### Solving Algorithms
 
-# Solve using DFS
-./mazeGen --solve dfs
-```
-Since the maze is generated randomly each time, the differences between algorithms is not  visually obvious. However, each algorithm follows its own unique search strategy, which affects path length and exploration patterns.
-
-## Output
-
-The program generates a 15x15 maze and displays it in ASCII format:
-
-- `S` marks the start position (top-left)
-- `E` marks the end position (bottom-right)
-- `*` marks the solution path
-- `+`, `-`, `|` represent maze walls
-
-Example output:
-
-```
-+---+---+---+---+---+
-| S     |           |
-+   +---+   +---+   +
-|   |       |   | * |
-+   +   +---+   +   +
-|       |       | * |
-+---+---+   +---+   +
-|           |     E |
-+---+---+---+---+---+
-```
-
-## Dependencies
-
-- [github.com/alexflint/go-arg](https://github.com/alexflint/go-arg) - Command line argument parsing
+- **DFS (Depth-First Search)**: Uses recursion and backtracking to find a path
+- **BFS (Breadth-First Search)**: Guarantees shortest path in unweighted graphs
+- **Dijkstra's Algorithm**: Finds shortest path using distance-based exploration
+- **A\* Algorithm**: Uses Manhattan distance heuristic for efficient pathfinding
 
 ## Configuration
 
-The maze size is currently hardcoded to 15x15 in `main.go`. You can modify the dimensions by changing:
+The maze size is set to 15x15 in `main.go`. To change dimensions, modify:
 
 ```go
 m := maze.NewMaze(15, 15)  // width, height
